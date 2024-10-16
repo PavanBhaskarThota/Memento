@@ -1,12 +1,15 @@
 import React from "react";
-import { Home } from "./Pages/Home";
 import { NavBar } from "./Pages/NavBar";
+import { MainRoutes } from "./Routes/MainRoutes";
+import { useLocation } from "react-router-dom";
 
 export const App = () => {
+  const location = useLocation();
+  const HideNavBar = location.pathname ==="/auth"
   return (
     <>
-      <NavBar />
-      <Home />
+      {!HideNavBar && <NavBar />}
+      <MainRoutes />
     </>
   );
 };
