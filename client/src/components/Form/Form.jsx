@@ -120,11 +120,9 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
 
       const urlData = await res.json();
       post.photo = urlData.url;
-      console.log(urlData);
     }
 
     if (currentId) {
-      console.log("updatePost", currentId, post);
       dispatch(updatePost({ id: currentId, post }));
     } else {
       dispatch(createPost(post));
@@ -161,10 +159,10 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
 
       <Typography variant="h5" textAlign={"center"}>
         {currentId
-          ? "Editing a Memory"
+          ? "Editing a Memento"
           : loading
           ? "Uploading..."
-          : "Create a Memory"}
+          : "Create a Memento"}
       </Typography>
       {loading ? (
         <Loading />
@@ -275,7 +273,7 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
               )
             }
           >
-            Save Post
+            Save Memory
           </Button>
           <Button
             fullWidth

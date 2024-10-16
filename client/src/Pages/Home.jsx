@@ -33,9 +33,9 @@ export const Home = () => {
             <Button
               onClick={() => setShow(true)}
               variant="contained"
-              sx={{ mb: 2 }}
+              sx={{ mb: 2 ,borderRadius:'20px'}}
             >
-              Add Post +
+              Add New Memento +
             </Button>
           </Box>
 

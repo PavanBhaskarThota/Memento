@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import React from "react";
 import { Post } from "./Post/Post";
 import useStyles from "./styles";
@@ -9,11 +9,17 @@ export const Posts = ({ setCurrentId }) => {
   const classes = useStyles();
   const { posts, status, error } = useSelector((state) => state.posts);
 
-  return !posts.length ? (
-    <>
+  return !posts?.length ? (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "60vh",
+      }}
+    >
       <CircularProgress />
-      <p>loading</p>
-    </>
+    </Box>
   ) : (
     <Grid
       className={classes.container}
