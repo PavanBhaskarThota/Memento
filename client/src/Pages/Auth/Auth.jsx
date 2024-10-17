@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ReplyIcon from "@mui/icons-material/Reply";
 import useStyles from "./styles";
+import { Input } from "./Input";
 
 export const Auth = () => {
   const classes = useStyles();
@@ -25,12 +26,14 @@ export const Auth = () => {
             />
 
             {!isSigned && (
-              <TextField
-                label="Confirm Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-              />
+              <>
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  name="password"
+                />
+                <TextField variant="outlined" fullWidth />
+              </>
             )}
 
             <Button variant="contained" size="large" fullWidth>
