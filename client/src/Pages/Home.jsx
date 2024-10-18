@@ -25,7 +25,14 @@ export const Home = () => {
     <Container
       maxWidth={false}
       disableGutters
-      style={{ width: "100%", padding: 0, margin: 0 }}
+      style={{
+        width: "100%",
+        padding: 0,
+        margin: 0,
+        backgroundColor: "black",
+        paddingTop: "30px",
+        backgroundImage: 'linear-gradient(to right, #d7d2cc 0%, #304352 100%)'
+      }}
     >
       <Grow in>
         <Container>
@@ -33,7 +40,8 @@ export const Home = () => {
             <Button
               onClick={() => setShow(true)}
               variant="contained"
-              sx={{ mb: 2 ,borderRadius:'20px'}}
+              sx={{ mb: 2, borderRadius: "20px" }}
+              color="success"
             >
               Add New Memento +
             </Button>

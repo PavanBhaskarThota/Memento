@@ -24,10 +24,18 @@ export default makeStyles(() => ({
     gap: "20px",
   },
 
-  form:{
+  form: {
     display: "flex",
     flexDirection: "column",
     gap: "20px",
     width: "100%",
-  }
+    color: "white",
+  },
+
+  profilePicContainer: {
+    position: "relative",
+    width: 100,
+    height: 100,
+    margin: "0 auto 10px",
+  },
 }));

@@ -249,6 +249,7 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
               <VisuallyHiddenInput
                 type="file"
                 name="photo"
+                accept="image/*"
                 ref={fileInputRef}
                 onChange={handleChange}
               />
