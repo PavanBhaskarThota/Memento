@@ -4,7 +4,6 @@ import PostService from "../../services/postServices";
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
   async (_, { rejectWithValue }) => {
-    console.log("get posts function called");
     try {
       const response = await PostService.getAllPosts();
       return response.data;
@@ -42,7 +41,6 @@ export const deletePost = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await PostService.deletePost(id);
-      console.log(response);
       if(response.statusText === "OK" && response.data.status ==='Post Deleted')
       return response.data ;
     } catch (error) {

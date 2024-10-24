@@ -24,7 +24,6 @@ export const createPost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   try {
-    console.log(req.params.id, req.body);
     const post = await updatePostData(req.params.id, req.body);
     res.status(200).send(post);
   } catch (error) {
@@ -33,7 +32,6 @@ export const updatePost = async (req, res) => {
 };
 export const deletePost = async (req, res) => {
   try {
-    console.log(req);
     const result = await deletePostData(req.params.id);
     res.status(200).send(result);
   } catch (error) {

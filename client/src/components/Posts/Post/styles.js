@@ -22,10 +22,10 @@ export default makeStyles({
     justifyContent: "space-between",
     borderRadius: "15px",
     height: "100%",
-    backgroundImage:
-      "linear-gradient(to right, #d7d2cc 0%, #304352 100%) !important",
-    backgroundImage:
-      "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%) !important",
+    // backgroundImage:
+    //   "linear-gradient(to right, #d7d2cc 0%, #304352 100%) !important",
+    // backgroundImage:
+    //   "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%) !important",
   },
   overlay: {
     position: "absolute",

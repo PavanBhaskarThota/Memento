@@ -12,7 +12,7 @@ export default makeStyles(() => ({
     // boxShadow: " rgba(0, 0, 0, 0.16) 0px 1px 4px",
     backgroundColor: "white",
     backgroundColor:'black',
-    backgroundImage: 'linear-gradient(to right, #d7d2cc 0%, #304352 100%)'
+    backgroundImage: 'linear-gradient(to right, #d7d2cc 0%, #304352 100%)',
   },
   heading: {
     color: "#227B94",

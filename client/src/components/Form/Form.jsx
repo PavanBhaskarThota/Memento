@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import useStyles from "./styles";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +15,7 @@ import { styled } from "@mui/material/styles";
 import { Loading } from "../Loading/Loading";
 import { createPost, updatePost } from "../../Redux/slices/post.slice";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -34,6 +42,9 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
     photo: "",
   });
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (currentId) {
@@ -128,34 +139,36 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
       dispatch(createPost(post));
     }
     clear();
-    handleClose();
+    if (isMobile) handleClose();
     setLoading(false);
   };
 
   return (
     <Paper className={classes.paper}>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleCloseModal}
-          sx={{
-            m: 3,
-            ml: 0,
-            borderRadius: "50%",
-            height: "40px",
-            width: "40px",
-            minWidth: 0,
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          disabled={loading}
-        >
-          <CloseIcon />
-        </Button>
-      </Box>
+      {isMobile && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleCloseModal}
+            sx={{
+              m: 3,
+              ml: 0,
+              borderRadius: "50%",
+              height: "40px",
+              width: "40px",
+              minWidth: 0,
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            disabled={loading}
+          >
+            <CloseIcon />
+          </Button>
+        </Box>
+      )}
 
       <Typography variant="h5" textAlign={"center"}>
         {currentId

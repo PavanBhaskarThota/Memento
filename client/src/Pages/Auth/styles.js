@@ -1,9 +1,9 @@
 import { makeStyles } from "@mui/styles";
-import mountain from "../../Images/mountain_pattern2.jpg";
+import mountain from "../../Images/mountain_pattern.jpg";
 
 export default makeStyles(() => ({
   container: {
-    height: "100vh",
+    height: "100dvh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
