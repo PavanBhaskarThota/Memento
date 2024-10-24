@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 export const App = () => {
   const location = useLocation();
-  const HideNavBar = location.pathname ==="/auth"
+  const HideNavBar = location.pathname === "/auth";
   return (
     <>
       {!HideNavBar && <NavBar />}

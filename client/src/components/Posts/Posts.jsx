@@ -15,7 +15,7 @@ export const Posts = ({ setCurrentId }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "60vh",
+        minHeight: "100dvh",
       }}
     >
       <CircularProgress />
@@ -34,7 +34,7 @@ export const Posts = ({ setCurrentId }) => {
             moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()
         )
         .map((post) => (
-          <Grid key={post._id} item xs={12} sm={3}>
+          <Grid key={post._id} item xs={12} sm={12}>
             <Post post={post} setCurrentId={setCurrentId} />
           </Grid>
         ))}

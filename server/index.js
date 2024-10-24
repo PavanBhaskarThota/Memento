@@ -4,11 +4,13 @@ import bodyParser from "body-parser";
 import { connection } from "./Database/db.js";
 import dotenv from "dotenv";
 import postRoutes from "./Routes/postRoutes.js";
+import userRoutes from "./Routes/userRoutes.js";
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/posts", postRoutes);
+app.use("/user", userRoutes);
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));

@@ -19,8 +19,8 @@ export default makeStyles(() => ({
 
   imagePreview: {
     maxWidth: "100%",
-    objectFit:'contain',
-    height: "300px",
+    objectFit: "contain",
+    maxHeight: "180px",
     borderRadius: "8px",
   },
 
