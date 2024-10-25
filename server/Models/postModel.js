@@ -8,6 +8,8 @@ const postSchema = new mongoose.Schema(
     tags: { type: [String], required: false },
     photo: { type: String, required: false },
     likeCount: { type: Number, default: 0 },
+    userId: { type: String, required: true },
+    userName: { type: String, required: true },
   },
   { timestamps: true },
   { versionKey: false }

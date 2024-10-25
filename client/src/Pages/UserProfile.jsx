@@ -19,9 +19,9 @@ import {
 } from "@mui/material";
 import { Edit, LockReset, Save, Cancel } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from "../Redux/slices/user.slice";
+import { getUserData, logout } from "../Redux/slices/user.slice";
 import moment from "moment";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -31,6 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export const UserProfile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userProfileData } = useSelector((state) => state.user);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -44,7 +45,7 @@ export const UserProfile = () => {
 
   useEffect(() => {
     dispatch(getUserData(id));
-    setEditData(userProfileData); // Update local state with user data
+    setEditData(userProfileData);
   }, [userProfileData]);
 
   const toggleEditMode = () => setIsEditing((prev) => !prev);
@@ -65,6 +66,11 @@ export const UserProfile = () => {
   const handleSaveChanges = () => {
     console.log("Saved data:", editData);
     setIsEditing(false);
+  };
+
+  const logoutUser = () => {
+    dispatch(logout());
+    navigate("/");
   };
 
   return (
@@ -190,11 +196,19 @@ export const UserProfile = () => {
                 >
                   Change Password
                 </Button>
+
+                <Button
+                  onClick={logoutUser}
+                  variant="contained"
+                  color="error"
+                  sx={{ marginRight: "20px", borderRadius: "20px" }}
+                >
+                  Logout
+                </Button>
               </Box>
             </CardContent>
           </Card>
 
-          {/* Change Password Modal */}
           <Dialog
             open={openPasswordModal}
             TransitionComponent={Transition}

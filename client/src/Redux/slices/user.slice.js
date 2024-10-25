@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authServices from "../../services/authServices";
+import TokenService from "../../services/tokenServices";
+import api from "../../Api";
+import toast from "react-hot-toast";
 
 export const createUser = createAsyncThunk(
   "users/createUser",
@@ -49,23 +52,26 @@ export const getUserData = createAsyncThunk(
   }
 );
 
+const initialState = {
+  user: null,
+  userNameTaken: null,
+  status: "idle",
+  error: null,
+  userProfileData: null,
+};
+
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    user: null,
-    userNameTaken: null,
-    status: "idle",
-    error: null,
-    userProfileData: null,
-  },
+  initialState,
   reducers: {
     getUser: (state) => {
       const user = JSON.parse(localStorage.getItem("user"));
       state.user = user;
     },
     logout: (state) => {
-      const user = localStorage.clear();
-      state.user = user;
+      TokenService.clearStorage();
+      api.defaults.headers["Authorization"] = "";
+      state.user = null;
     },
   },
   extraReducers: (builder) => {
@@ -74,10 +80,16 @@ const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(createUser.fulfilled, (state, action) => {
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
-        localStorage.setItem("token", JSON.stringify(action.payload.token));
-        state.status = "succeeded";
-        state.user = action.payload;
+        if (action.payload.message === "User already exists!") {
+          toast.error("User already exists! with this email");
+          state.status = "failed";
+        } else {
+          toast.success("User created successfully");
+          localStorage.setItem("user", JSON.stringify(action.payload.user));
+          localStorage.setItem("token", JSON.stringify(action.payload.token));
+          state.status = "succeeded";
+          state.user = action.payload.user;
+        }
       })
       .addCase(createUser.rejected, (state, action) => {
         state.status = "failed";

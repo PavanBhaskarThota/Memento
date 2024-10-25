@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import PostService from "../../services/postServices";
+import toast from "react-hot-toast";
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
@@ -30,6 +31,10 @@ export const updatePost = createAsyncThunk(
   async ({ id, post }, { rejectWithValue }) => {
     try {
       const response = await PostService.updatePost(id, post);
+      if (response.data.message === "Unauthorized") {
+        console.log(response.data.message);
+        toast.error("Unauthorized: Please log in to update a post");
+      }
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -41,8 +46,16 @@ export const deletePost = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await PostService.deletePost(id);
-      if(response.statusText === "OK" && response.data.status ==='Post Deleted')
-      return response.data ;
+      console.log(response);
+      if (
+        response.statusText === "OK" &&
+        response.data.message === "Post Deleted"
+      ) {
+        return response.data;
+      }else if (response.data.message === "Unauthorized") {
+        toast.error("You can't delete other people posts");
+        return response.data;
+      }
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -55,6 +68,7 @@ const postsSlice = createSlice({
     posts: [],
     status: "idle",
     error: null,
+    message: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -71,17 +85,23 @@ const postsSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.posts.push(action.payload);
+        if (action.payload.photo) {
+          state.posts.push(action.payload);
+        }
       })
       .addCase(updatePost.fulfilled, (state, action) => {
-        state.posts = state.posts.map((post) =>
-          post._id === action.payload._id ? action.payload : post
-        );
+        if (action.payload.message !== "Unauthorized") {
+          state.posts = state.posts.map((post) =>
+            post._id === action.payload._id ? action.payload : post
+          );
+        }
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.posts = state.posts.filter(
-          (post) => post._id !== action.payload.post._id
-        );
+        if (action.payload.message === "Post Deleted") {
+          state.posts = state.posts.filter(
+            (post) => post._id !== action.payload.post._id
+          );
+        }
       });
   },
 });

@@ -1,10 +1,11 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import memento from "../Images/camera.png";
 import useStyles from "./styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, logout } from "../Redux/slices/user.slice";
+import { getUser } from "../Redux/slices/user.slice";
+import { deepOrange } from "@mui/material/colors";
 
 export const NavBar = () => {
   const classes = useStyles();
@@ -32,25 +33,31 @@ export const NavBar = () => {
           <img className={classes.image} src={memento} alt="" />
         </Box>
         {user ? (
-          <Box >
-            {/* <Typography
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <Typography
               sx={{
-                marginRight: "20px",
                 textTransform: "uppercase",
+                textDecoration: "none",
                 color: "white",
               }}
-              variant="h5"
+              variant="h6"
+              component={Link}
+              to={`/profile/${user.name}/${user._id}`}
             >
               {user?.name}
-            </Typography> */}
-            <Button
-              onClick={() => dispatch(logout())}
-              variant="contained"
-              color="error"
-              sx={{ marginRight: "20px", borderRadius: "20px" }}
+            </Typography>
+            <Avatar
+              sx={{ bgcolor: deepOrange[500], marginRight: "20px" }}
+              src={user.profilePic}
             >
-              Logout
-            </Button>
+              {!user.profilePic && user.name?.charAt(0).toUpperCase()}
+            </Avatar>
           </Box>
         ) : (
           <Button

@@ -10,6 +10,7 @@ const PostService = {
   },
 
   async updatePost(id, post) {
+    console.log(api);
     return await api.patch(`/posts/update/${id}`, post);
   },
 
