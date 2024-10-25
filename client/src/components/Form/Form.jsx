@@ -16,6 +16,7 @@ import { Loading } from "../Loading/Loading";
 import { createPost, updatePost } from "../../Redux/slices/post.slice";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
+import { compressImage } from "../../helpers/fileCompress";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -54,24 +55,25 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
   }, [currentId]);
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-
+    const { name, type, files } = e.target;
+  
     if (type === "file") {
       const file = files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPostData({ ...postData, [name]: reader.result });
-        };
-
-        reader.readAsDataURL(file);
+        
+        compressImage(file).then((compressed) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setPostData({ ...postData, [name]: reader.result });
+          };
+          reader.readAsDataURL(compressed); 
+        }).catch((err) => console.error("Image compression failed:", err));
       }
-    } else if (name === "tags") {
-      setPostData({ ...postData, [name]: value.split(",") });
     } else {
-      setPostData({ ...postData, [name]: value });
+      setPostData({ ...postData, [name]: e.target.value });
     }
   };
+  
 
   const handleFileRemove = () => {
     setPostData({ ...postData, photo: "" });
@@ -105,42 +107,47 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { title, creator, message, tags, photo } = postData;
+    try {
+      const { title, creator, message, tags, photo } = postData;
 
-    if (!title || !creator || !message || !tags || !photo) {
-      alert("Please fill in all the fields and upload a photo.");
-      return;
+      if (!title || !creator || !message || !tags || !photo) {
+        alert("Please fill in all the fields and upload a photo.");
+        return;
+      }
+      setLoading(true);
+
+      const post = { ...postData };
+
+      if (postData.photo && !currentId) {
+
+        const data = new FormData();
+        data.append("file", postData.photo);
+        data.append("upload_preset", "memento");
+        data.append("cloud_name", "dowxfiyte");
+
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/dowxfiyte/image/upload",
+          {
+            method: "post",
+            body: data,
+          }
+        );
+
+        const urlData = await res.json();
+        post.photo = urlData.url;
+      }
+
+      if (currentId) {
+        dispatch(updatePost({ id: currentId, post }));
+      } else {
+        dispatch(createPost(post));
+      }
+      clear();
+      if (isMobile) handleClose();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
     }
-    setLoading(true);
-
-    const post = { ...postData };
-
-    if (postData.photo && !currentId) {
-      const data = new FormData();
-      data.append("file", postData.photo);
-      data.append("upload_preset", "memento");
-      data.append("cloud_name", "dowxfiyte");
-
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/dowxfiyte/image/upload",
-        {
-          method: "post",
-          body: data,
-        }
-      );
-
-      const urlData = await res.json();
-      post.photo = urlData.url;
-    }
-
-    if (currentId) {
-      dispatch(updatePost({ id: currentId, post }));
-    } else {
-      dispatch(createPost(post));
-    }
-    clear();
-    if (isMobile) handleClose();
-    setLoading(false);
   };
 
   return (

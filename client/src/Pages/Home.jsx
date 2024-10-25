@@ -33,6 +33,8 @@ export const Home = () => {
     if (!user) dispatch(getUser());
   }, [user, dispatch]);
 
+  console.log(user);
+
   const handleClose = () => {
     setShow(false);
   };
@@ -77,7 +79,7 @@ export const Home = () => {
           />
           <Grid container spacing={3}>
             {!isMobile && (
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} lg={3}>
                 <Box
                   sx={{
                     position: "sticky",
@@ -111,9 +113,7 @@ export const Home = () => {
                         }}
                         variant="h6"
                         component={Link}
-                        to={`/profile/${user.name.split(" ").join("_")}/${
-                          user._id
-                        }`}
+                        to={`/profile/${user.name}/${user._id}`}
                       >
                         {user?.name}
                       </Typography>
@@ -132,14 +132,21 @@ export const Home = () => {
             </Grid>
             {!isMobile && (
               <Grid item xs={12} md={4}>
-                <Box
-                  sx={{
-                    position: "sticky",
-                    top: "10px",
-                  }}
-                >
-                  <Form currentId={currentId} setCurrentId={setCurrentId} />
-                </Box>
+                {user ? (
+                  <Box
+                    sx={{
+                      position: "sticky",
+                      top: "10px",
+                    }}
+                  >
+                    <Form currentId={currentId} setCurrentId={setCurrentId} />
+                  </Box>
+                ) : (
+                  <Typography>
+                    Please login to share your mementos and like and comment on
+                    others
+                  </Typography>
+                )}
               </Grid>
             )}
           </Grid>

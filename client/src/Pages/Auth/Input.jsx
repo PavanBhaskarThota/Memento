@@ -1,7 +1,14 @@
 import { TextField } from "@mui/material";
 import React from "react";
 
-export const Input = ({ label, name, handleChange, type, value }) => {
+export const Input = ({
+  label,
+  name,
+  handleChange,
+  type,
+  value,
+  isNameTaken,
+}) => {
   return (
     <TextField
       label={label}
@@ -12,6 +19,7 @@ export const Input = ({ label, name, handleChange, type, value }) => {
       value={value}
       type={type}
       fullWidth
+      helperText={isNameTaken && name === "name" ? "Name already taken" : ""}
       sx={{
         "& .MuiOutlinedInput-root": {
           "& fieldset": {

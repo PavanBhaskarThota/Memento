@@ -24,7 +24,7 @@ export const Post = ({ post, setCurrentId }) => {
       <Box position="relative">
         <CardMedia
           className={classes?.media}
-          image={post.photo}
+          image={post?.photo}
           alt="https://via.placeholder.com/300x200?text=Image+Not+Available"
           onError={(e) => {
             e.target.src =
@@ -32,9 +32,9 @@ export const Post = ({ post, setCurrentId }) => {
           }}
         />
         <Box className={classes.overlay}>
-          <Typography variant="h6">{post.creator}</Typography>
+          <Typography variant="h6">{post?.creator}</Typography>
           <Typography variant="body2">
-            {moment(post.createdAt).fromNow()}
+            {moment(post?.createdAt).fromNow()}
           </Typography>
         </Box>
         <Box className={classes.overlay2}>
@@ -42,7 +42,7 @@ export const Post = ({ post, setCurrentId }) => {
             sx={{ color: "#ffff" }}
             size="large"
             onClick={() => {
-              setCurrentId(post._id);
+              setCurrentId(post?._id);
             }}
           >
             <MoreHorizIcon fontSize="default" />
@@ -50,28 +50,28 @@ export const Post = ({ post, setCurrentId }) => {
         </Box>
         <Box className={classes.overlay3}>
           <Typography variant="body2">
-            {post.createdAt !== post.updatedAt &&
-              `Updated ${moment(post.updatedAt).fromNow()}`}
+            {post?.createdAt !== post?.updatedAt &&
+              `Updated ${moment(post?.updatedAt).fromNow()}`}
           </Typography>
         </Box>
       </Box>
 
       <Box className={classes.details}>
         <Typography variant="body2" color="textSecondary">
-          {post.tags.map((tag) => `#${tag} `)}
+          {post?.tags.map((tag) => `#${tag} `)}
         </Typography>
       </Box>
       <Typography className={classes.title} variant="h5" gutterBottom>
-        {post.title}
+        {post?.title}
       </Typography>
       <CardContent>
         <Typography variant="body2" color="textSecondary">
-          {post.message}
+          {post?.message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary" startIcon={<ThumbUpIcon />}>
-          Like {post.likeCount}
+          Like {post?.likeCount}
         </Button>
         <Button
           size="small"

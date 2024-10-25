@@ -11,6 +11,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReplyIcon from "@mui/icons-material/Reply";
 import EditIcon from "@mui/icons-material/Edit";
+import ClearIcon from "@mui/icons-material/Clear";
 import useStyles from "./styles";
 import { Input } from "./Input";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,8 @@ import {
   isUserNameTaken,
   loginUser,
 } from "../../Redux/slices/user.slice";
+import toast from "react-hot-toast";
+import { compressImage } from "../../helpers/fileCompress";
 
 const userData = {
   name: "",
@@ -57,21 +60,56 @@ export const Auth = () => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        setUser((prev) => ({ ...prev, profilePic: reader.result }));
-      };
-      reader.readAsDataURL(file);
+
+      compressImage(file)
+        .then((compressed) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setUser((prev) => ({ ...prev, profilePic: reader.result }));
+          };
+          reader.readAsDataURL(compressed);
+        })
+        .catch((err) => console.error("Image compression failed:", err));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isSigned) {
-      dispatch(loginUser(user));
+    if (!isSigned && user.password !== user.confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
-    dispatch(createUser(user));
+
+    if (!isSigned && isNameTaken) {
+      toast.error("Name already taken");
+      return;
+    }
+    const userData = { ...user };
+
+    if (userData.profilePic) {
+      const data = new FormData();
+      data.append("file", userData.profilePic);
+      data.append("upload_preset", "memento");
+      data.append("cloud_name", "dowxfiyte");
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dowxfiyte/image/upload",
+        {
+          method: "post",
+          body: data,
+        }
+      );
+
+      const urlData = await res.json();
+      userData.profilePic = urlData.url;
+    }
+
+    if (isSigned) {
+      dispatch(loginUser(userData));
+      return;
+    }
+    dispatch(createUser(userData));
   };
 
   useEffect(() => {
@@ -87,6 +125,10 @@ export const Auth = () => {
 
   const triggerFileInput = () => {
     fileInputRef.current.click();
+  };
+
+  const clear = () => {
+    setUser((prev) => ({ ...prev, profilePic: "" }));
   };
 
   return (
@@ -106,17 +148,32 @@ export const Auth = () => {
                     src={user.profilePic}
                     sx={{ width: 100, height: 100 }}
                   />
-                  <IconButton
-                    onClick={triggerFileInput}
-                    sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
+                  {user.profilePic ? (
+                    <IconButton
+                      onClick={clear}
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        backgroundColor: "white",
+                        color: "red",
+                      }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      onClick={triggerFileInput}
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
                   <input
                     type="file"
                     accept="image/*"
@@ -128,22 +185,14 @@ export const Auth = () => {
               )}
 
               {!isSigned && (
-                <>
-                  <Input
-                    label="Name"
-                    name="name"
-                    type="text"
-                    value={user.name}
-                    handleChange={handleChange}
-                  />
-                  {isNameTaken && (
-                    <Typography color="white">
-                      This User Name{" "}
-                      <span style={{ color: "red" }}>{user.name}</span> is
-                      already taken
-                    </Typography>
-                  )}
-                </>
+                <Input
+                  label="Name"
+                  name="name"
+                  type="text"
+                  value={user.name}
+                  handleChange={handleChange}
+                  isNameTaken={isNameTaken}
+                />
               )}
               <Input
                 label="Email"

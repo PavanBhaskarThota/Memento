@@ -14,8 +14,9 @@ class UserServices {
 
   async createUser(user) {
     try {
+      console.log(user);
       const { name, email, password } = user;
-      const existingUser = await UserModel.findOne({ email, name });
+      const existingUser = await UserModel.findOne({ email });
 
       if (existingUser) {
         return { message: "User already exists!" };
@@ -27,41 +28,16 @@ class UserServices {
       await newUser.save();
 
       const token = jwt.sign(
-        { email: user.email },
+        { user: newUser },
         process.env.JWT_SECRET || "pavan"
       );
-      return { newUser, token };
+
+      console.log(newUser);
+      return { user: newUser, token };
     } catch (error) {
       return { error: error.message };
     }
   }
-
-  // async loginUser(user) {
-  //   try {
-  //     const { email, password } = user;
-  //     const existingUser = await UserModel.findOne({ email: email });
-  //     if (existingUser) {
-  //       console.log(existingUser)
-  //       bcrypt.compare(password, existingUser.password, (err, result) => {
-  //         if (result) {
-  //           console.log(result)
-  //           const token = jwt.sign(
-  //             { email: user.email },
-  //             process.env.JWT_SECRET || "pavan"
-  //           );
-  //           return { user: existingUser, token };
-  //         } else {
-
-  //           return { message: "Password is incorrect!" };
-  //         }
-  //       });
-  //     } else {
-  //       return { message: "User does not exist!" };
-  //     }
-  //   } catch (error) {
-  //     return { error: error.message };
-  //   }
-  // }
 
   async loginUser(user) {
     try {
@@ -69,11 +45,14 @@ class UserServices {
       const existingUser = await UserModel.findOne({ email: email });
       const result = await bcrypt.compare(password, existingUser.password);
       if (result) {
-        const token = jwt.sign(
-          { email: user.email },
-          process.env.JWT_SECRET || "pavan"
-        );
-        return { user: existingUser, token };
+        const user = {
+          name: existingUser.name,
+          _id: existingUser._id,
+          profilePic: existingUser.profilePic,
+        };
+        const token = jwt.sign({ user }, "pavan");
+
+        return { user, token };
       } else {
         return { message: "Password is incorrect!" };
       }
