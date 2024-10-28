@@ -14,7 +14,6 @@ class PostServices {
     try {
       const post = new PostModel(postData);
       await post.save();
-      console.log(post);
       return post;
     } catch (error) {
       return { error: error.message };
@@ -23,9 +22,11 @@ class PostServices {
 
   async updatePost(id, postData, user) {
     try {
-      const postD = await PostModel.findById(id);
-      if (user.userId === postD.userId) {
-        const post = await PostModel.findByIdAndUpdate(id, postData);
+      const postDetails = await PostModel.findById(id);
+      if (user.userId === postDetails.userId) {
+        const post = await PostModel.findByIdAndUpdate(id, postData, {
+          new: true,
+        });
         return post;
       }
       return { message: "Unauthorized" };
@@ -36,12 +37,40 @@ class PostServices {
 
   async deletePost(id, user) {
     try {
-      const postD = await PostModel.findById(id);
-      if (user.userId === postD.userId) {
-        const post = await PostModel.findByIdAndDelete(id);
+      const postDetails = await PostModel.findById(id);
+      if (user.userId === postDetails.userId) {
+        const post = await PostModel.findByIdAndDelete(id, { new: true });
         return { post: post, message: "Post Deleted" };
       }
       return { message: "Unauthorized" };
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+  async likePost(id, user) {
+    try {
+      const postDetails = await PostModel.findById(id);
+      const like = postDetails.likeCount.find(
+        (like) => like.userId === user.userId
+      );
+
+      if (like) {
+        postDetails.likeCount = postDetails.likeCount.filter(
+          (like) => like.userId !== user.userId
+        );
+      } else {
+        postDetails.likeCount.push({
+          userId: user.userId,
+          userName: user.userName,
+        });
+      }
+      const post = await PostModel.findByIdAndUpdate(
+        id,
+        { likeCount: postDetails.likeCount },
+        { new: true, timestamps: false }
+      );
+
+      return post;
     } catch (error) {
       return { error: error.message };
     }

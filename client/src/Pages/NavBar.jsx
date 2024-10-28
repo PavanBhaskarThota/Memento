@@ -37,24 +37,18 @@ export const NavBar = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "10px",
+              gap: "5px",
             }}
           >
-            <Typography
+            <Avatar
               sx={{
-                textTransform: "uppercase",
+                bgcolor: deepOrange[500],
+                marginRight: "20px",
                 textDecoration: "none",
-                color: "white",
               }}
-              variant="h6"
+              src={user.profilePic}
               component={Link}
               to={`/profile/${user.name}/${user._id}`}
-            >
-              {user?.name}
-            </Typography>
-            <Avatar
-              sx={{ bgcolor: deepOrange[500], marginRight: "20px" }}
-              src={user.profilePic}
             >
               {!user.profilePic && user.name?.charAt(0).toUpperCase()}
             </Avatar>

@@ -1,5 +1,9 @@
 import { makeStyles } from "@mui/styles";
-import mountain from "../../Images/mountain_pattern.jpg";
+
+const image1 =
+  "https://res.cloudinary.com/dowxfiyte/image/upload/v1729881781/mountain_pattern2_pqmltd.jpg";
+const image2 =
+  "https://res.cloudinary.com/dowxfiyte/image/upload/v1729881788/mountain_pattern_zfqpsn.jpg";
 
 export default makeStyles(() => ({
   container: {
@@ -7,7 +11,7 @@ export default makeStyles(() => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundImage: `url(${mountain})`,
+    backgroundImage: `url(${image2})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   },

@@ -37,7 +37,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
   const { posts, status } = useSelector((state) => state.posts);
   const [postData, setPostData] = useState({
     title: "",
-    creator: "",
     message: "",
     tags: "",
     photo: "",
@@ -56,24 +55,24 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
 
   const handleChange = (e) => {
     const { name, type, files } = e.target;
-  
+
     if (type === "file") {
       const file = files[0];
       if (file) {
-        
-        compressImage(file).then((compressed) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setPostData({ ...postData, [name]: reader.result });
-          };
-          reader.readAsDataURL(compressed); 
-        }).catch((err) => console.error("Image compression failed:", err));
+        compressImage(file)
+          .then((compressed) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setPostData({ ...postData, [name]: reader.result });
+            };
+            reader.readAsDataURL(compressed);
+          })
+          .catch((err) => console.error("Image compression failed:", err));
       }
     } else {
       setPostData({ ...postData, [name]: e.target.value });
     }
   };
-  
 
   const handleFileRemove = () => {
     setPostData({ ...postData, photo: "" });
@@ -85,7 +84,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
   const clear = () => {
     setPostData({
       title: "",
-      creator: "",
       message: "",
       tags: "",
       photo: "",
@@ -108,9 +106,9 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
     e.preventDefault();
 
     try {
-      const { title, creator, message, tags, photo } = postData;
+      const { title, message, tags, photo } = postData;
 
-      if (!title || !creator || !message || !tags || !photo) {
+      if (!title || !message || !tags || !photo) {
         alert("Please fill in all the fields and upload a photo.");
         return;
       }
@@ -119,7 +117,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
       const post = { ...postData };
 
       if (postData.photo && !currentId) {
-
         const data = new FormData();
         data.append("file", postData.photo);
         data.append("upload_preset", "memento");
@@ -136,16 +133,20 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
         const urlData = await res.json();
         post.photo = urlData.url;
       }
+      post.tags = post.tags.split(",").map((tag) => tag.trim());
 
       if (currentId) {
+        console.log(post);
         dispatch(updatePost({ id: currentId, post }));
       } else {
+        console.log(post);
         dispatch(createPost(post));
       }
       clear();
       if (isMobile) handleClose();
       setLoading(false);
     } catch (error) {
+      console.log(error);
       setLoading(false);
     }
   };
@@ -192,15 +193,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
           onSubmit={handleSubmit}
           className={`${classes.root} ${classes.form}`}
         >
-          <TextField
-            name="creator"
-            value={postData.creator}
-            variant="outlined"
-            fullWidth
-            label="Creator"
-            required
-            onChange={handleChange}
-          />
           <TextField
             name="title"
             value={postData.title}
@@ -287,7 +279,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
             disabled={
               !(
                 postData.title &&
-                postData.creator &&
                 postData.message &&
                 postData.tags &&
                 postData.photo
@@ -305,7 +296,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
             disabled={
               !(
                 postData.title ||
-                postData.creator ||
                 postData.message ||
                 postData.tags ||
                 postData.photo

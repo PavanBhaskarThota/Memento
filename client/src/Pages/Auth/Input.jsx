@@ -1,4 +1,6 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField, IconButton } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import React from "react";
 
 export const Input = ({
@@ -8,6 +10,7 @@ export const Input = ({
   type,
   value,
   isNameTaken,
+  handleClickShowPassword,
 }) => {
   return (
     <TextField
@@ -20,6 +23,23 @@ export const Input = ({
       type={type}
       fullWidth
       helperText={isNameTaken && name === "name" ? "Name already taken" : ""}
+      InputProps={
+        name === "password"
+          ? {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {type === "password" ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
+          : null
+      }
       sx={{
         "& .MuiOutlinedInput-root": {
           "& fieldset": {

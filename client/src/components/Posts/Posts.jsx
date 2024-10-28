@@ -26,9 +26,9 @@ export const Posts = ({ setCurrentId }) => {
       container
       alignItems="stretch"
       spacing={3}
-      // gap={3}
+      
     >
-      {[...posts] // Create a copy of the posts array
+      {[...posts] 
         .sort(
           (a, b) =>
             moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()

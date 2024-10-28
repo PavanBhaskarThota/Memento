@@ -1,14 +1,19 @@
 class TokenService {
   getLocalAccessToken() {
-    return JSON.parse(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
+    console.log("Retrieved Token:", token); // Log token to debug
+    return token; // No need for JSON.parse
   }
 
   updateLocalAccessToken(token) {
-    localStorage.setItem("token", JSON.stringify(token));
+    console.log("Storing Token:", token); // Log token to debug
+    localStorage.setItem("token", token); // Store token as plain string
   }
 
   getLocalRefreshToken() {
-    return JSON.parse(localStorage.getItem("refreshToken"));
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("Retrieved Refresh Token:", refreshToken); // Log token to debug
+    return refreshToken; // No need for JSON.parse
   }
 
   clearStorage() {

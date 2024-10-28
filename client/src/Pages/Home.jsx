@@ -30,19 +30,47 @@ export const Home = () => {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!user) dispatch(getUser());
+    if (!user) {
+      dispatch(getUser());
+    }
   }, [user, dispatch]);
 
-  console.log(user);
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (currentId && isMobile) {
+      setShow(true);
+    }
+  }, [currentId, isMobile]);
 
   const handleClose = () => {
     setShow(false);
   };
 
-  useEffect(() => {
-    if (currentId && isMobile) setShow(true);
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
+  const handleOpen = () => {
+    setShow(true);
+  };
+
+  const clearCurrentId = () => {
+    setCurrentId(null);
+  };
+
+  // useEffect(() => {
+  //   if (!user) dispatch(getUser());
+  // }, [user, dispatch]);
+
+  // console.log(user);
+
+  // const handleClose = () => {
+  //   setShow(false);
+  // };
+  // dispatch(getPosts());
+  // useEffect(() => {
+  //   if (currentId && isMobile) setShow(true);
+  //   console.log("post function called");
+  // }, [currentId, dispatch]);
 
   return (
     <Container
@@ -64,8 +92,8 @@ export const Home = () => {
               <Button
                 onClick={() => setShow(true)}
                 variant="contained"
-                sx={{ mb: 2, borderRadius: "20px" }}
-                color="success"
+                sx={{ mb: 2, borderRadius: "5px" }}
+                color="primary"
               >
                 Add New Memento +
               </Button>
