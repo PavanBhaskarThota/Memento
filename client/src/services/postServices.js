@@ -10,12 +10,14 @@ const PostService = {
   },
 
   async updatePost(id, post) {
-    console.log(api);
     return await api.patch(`/posts/update/${id}`, post);
   },
 
   async deletePost(id) {
     return await api.delete(`/posts/delete/${id}`);
+  },
+  async likePost(id) {
+    return await api.patch(`/posts/likePost/${id}`);
   },
 };
 

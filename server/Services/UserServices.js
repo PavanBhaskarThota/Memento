@@ -14,7 +14,6 @@ class UserServices {
 
   async createUser(user) {
     try {
-      console.log(user);
       const { name, email, password } = user;
       const existingUser = await UserModel.findOne({ email });
 
@@ -31,8 +30,6 @@ class UserServices {
         { user: newUser },
         process.env.JWT_SECRET || "pavan"
       );
-
-      console.log(newUser);
       return { user: newUser, token };
     } catch (error) {
       return { error: error.message };
@@ -43,6 +40,9 @@ class UserServices {
     try {
       const { email, password } = user;
       const existingUser = await UserModel.findOne({ email: email });
+      if (!existingUser) {
+        return { message: "User does not exist!" };
+      }
       const result = await bcrypt.compare(password, existingUser.password);
       if (result) {
         const user = {

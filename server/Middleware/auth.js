@@ -8,7 +8,6 @@ export const auth = (req, res, next) => {
 
   if (token) {
     jwt.verify(token, "pavan", (err, decoded) => {
-      console.log(decoded);
       if (decoded) {
         req.body.userId = decoded.user._id;
         req.body.userName = decoded.user.name;

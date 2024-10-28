@@ -4,10 +4,17 @@ const postSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     message: { type: String, required: true },
-    creator: { type: String, required: true },
     tags: { type: [String], required: false },
     photo: { type: String, required: false },
-    likeCount: { type: Number, default: 0 },
+    likeCount: {
+      type: [
+        {
+          userId: { type: String },
+          userName: { type: String },
+          _id: false,
+        },
+      ],
+    },
     userId: { type: String, required: true },
     userName: { type: String, required: true },
   },

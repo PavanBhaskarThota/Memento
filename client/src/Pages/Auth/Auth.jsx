@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import ReplyIcon from "@mui/icons-material/Reply";
 import EditIcon from "@mui/icons-material/Edit";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -40,11 +40,13 @@ export const Auth = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const { userNameTaken, status } = useSelector((state) => state.user);
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  useEffect(() => {
-    setIsNameTaken(userNameTaken);
-  }, [userNameTaken]);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const isAuthenticated = !!localStorage.getItem("token");
+
+  const { userNameTaken, status } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -112,12 +114,6 @@ export const Auth = () => {
     dispatch(createUser(userData));
   };
 
-  useEffect(() => {
-    if (status === "succeeded") {
-      navigate("/");
-    }
-  }, [status, navigate]);
-
   const handleIsSigned = () => {
     setIsSigned(!isSigned);
     setUser(userData);
@@ -130,6 +126,22 @@ export const Auth = () => {
   const clear = () => {
     setUser((prev) => ({ ...prev, profilePic: "" }));
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    setIsNameTaken(userNameTaken);
+  }, [userNameTaken]);
+
+  useEffect(() => {
+    if (status === "succeeded") {
+      navigate("/");
+    }
+  }, [status, navigate]);
 
   return (
     <Box className={classes.container}>
@@ -204,15 +216,16 @@ export const Auth = () => {
               <Input
                 label="Password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={user.password}
                 handleChange={handleChange}
+                handleClickShowPassword={handleClickShowPassword}
               />
               {!isSigned && (
                 <Input
                   label="Confirm Password"
                   name="confirmPassword"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={user.confirmPassword}
                   handleChange={handleChange}
                 />
