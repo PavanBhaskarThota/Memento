@@ -60,6 +60,18 @@ export const getUserData = createAsyncThunk(
   }
 );
 
+export const updateUserData = createAsyncThunk(
+  "users/updateUserData",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const { data: user } = await authServices.updateUser(id, data);
+      return user;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -116,15 +128,23 @@ const userSlice = createSlice({
       })
       .addCase(getUserData.fulfilled, (state, { payload }) => {
         state.userProfileData = payload;
+      })
+      .addCase(updateUserData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateUserData.fulfilled, (state, { payload }) => {
+        state.user = payload;
+        const user = JSON.parse(localStorage.getItem("user"));
+        user.profilePic = payload.profilePic;
+        localStorage.setItem("user", JSON.stringify(user));
+        state.userProfileData = payload;
+        state.status = "succeeded";
       });
   },
 });
 
 const saveUserToLocalStorage = ({ user, token, message, error }) => {
-  console.log(message, error);
-  console.log(user, token);
   if (user && token) {
-    console.log(user, token);
     toast.success("Logged in successfully");
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);

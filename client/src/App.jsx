@@ -7,10 +7,11 @@ import { Toaster } from "react-hot-toast";
 export const App = () => {
   const location = useLocation();
   const HideNavBar = location.pathname === "/auth";
+  const NavBarColor = location.pathname === "/";
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
-      {!HideNavBar && <NavBar />}
+      {!HideNavBar && <NavBar NavBarColor={NavBarColor} />}
       <MainRoutes />
     </>
   );

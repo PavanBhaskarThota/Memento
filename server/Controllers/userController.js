@@ -22,7 +22,6 @@ class UserController {
 
   async loginUser(req, res) {
     try {
-      console.log(req.body);
       const user = await userServices.loginUser(req.body);
       res.status(200).send(user);
     } catch (error) {
@@ -34,6 +33,16 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await userServices.getUserData(id);
+      res.status(200).send(user);
+    } catch (error) {
+      res.status(404).send({ error: error.message });
+    }
+  }
+
+  async updateUser (req,res){
+    try {
+      const { id } = req.params;
+      const user = await userServices.updateUser(id,req.body);
       res.status(200).send(user);
     } catch (error) {
       res.status(404).send({ error: error.message });

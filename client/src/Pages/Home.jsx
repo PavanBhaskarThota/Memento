@@ -12,7 +12,7 @@ import {
 import useStyles from "./styles";
 import { Posts } from "../components/Posts/Posts";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "../Redux/slices/post.slice";
+import { getPosts, incrementPage } from "../Redux/slices/post.slice";
 import { FormModal } from "../components/Modals/FormModal";
 import { Form } from "../components/Form/Form";
 import { useTheme } from "@mui/material/styles";
@@ -28,6 +28,15 @@ export const Home = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user } = useSelector((state) => state.user);
+  const {
+    posts,
+    hasMore,
+    page: currentPage,
+  } = useSelector((state) => state.posts);
+
+  const handleClose = () => {
+    setShow(false);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -36,41 +45,52 @@ export const Home = () => {
   }, [user, dispatch]);
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
-
-  useEffect(() => {
     if (currentId && isMobile) {
       setShow(true);
     }
   }, [currentId, isMobile]);
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
-  const handleOpen = () => {
-    setShow(true);
-  };
-
-  const clearCurrentId = () => {
-    setCurrentId(null);
-  };
+  // useEffect(() => {
+  //   if (currentPage === 1 && posts.length === 0) {
+  //     dispatch(getPosts({ currentPage }));
+  //   }
+  // }, [dispatch, currentPage]);
 
   // useEffect(() => {
-  //   if (!user) dispatch(getUser());
-  // }, [user, dispatch]);
+  //   window.onscroll = () => {
+  //     if (
+  //       window.innerHeight + window.scrollY >=
+  //         document.documentElement.offsetHeight - 10 &&
+  //       hasMore
+  //     ) {
+  //       dispatch(incrementPage());
+  //       dispatch(getPosts({ page: currentPage + 1 }));
+  //     }
+  //   };
+  //   return () => (window.onscroll = null);
+  // }, [dispatch, currentPage, hasMore]);
 
-  // console.log(user);
+  // Remove this line: const [page, setPage] = useState(1);
 
-  // const handleClose = () => {
-  //   setShow(false);
-  // };
-  // dispatch(getPosts());
-  // useEffect(() => {
-  //   if (currentId && isMobile) setShow(true);
-  //   console.log("post function called");
-  // }, [currentId, dispatch]);
+  useEffect(() => {
+    if (currentPage === 1 && posts.length === 0) {
+      dispatch(getPosts({ page: currentPage }));
+    }
+  }, [dispatch, currentPage, posts.length, posts]);
+
+  useEffect(() => {
+    window.onscroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.documentElement.offsetHeight - 10 &&
+        hasMore
+      ) {
+        dispatch(incrementPage());
+        dispatch(getPosts({ page: currentPage + 1 }));
+      }
+    };
+    return () => (window.onscroll = null); // Clean up on unmount
+  }, [dispatch, currentPage, hasMore]);
 
   return (
     <Container
@@ -87,7 +107,7 @@ export const Home = () => {
     >
       <Grow in>
         <Container>
-          {isMobile && (
+          {isMobile && user && (
             <Box display="flex" justifyContent="flex-end">
               <Button
                 onClick={() => setShow(true)}
@@ -95,7 +115,7 @@ export const Home = () => {
                 sx={{ mb: 2, borderRadius: "5px" }}
                 color="primary"
               >
-                Add New Memento +
+                Add Memento +
               </Button>
             </Box>
           )}

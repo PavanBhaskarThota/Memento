@@ -1,22 +1,38 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import memento from "../Images/camera.png";
 import useStyles from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../Redux/slices/user.slice";
 import { deepOrange } from "@mui/material/colors";
 
-export const NavBar = () => {
-  const classes = useStyles();
+export const NavBar = ({ NavBarColor }) => {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  const classes = useStyles(isHomePage);
   const { user } = useSelector((state) => state.user);
+  const isAuthenticated = !!localStorage.getItem("token");
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const fetchUser = () => {
+    try {
+      dispatch(getUser());
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!user) {
-      dispatch(getUser());
+      fetchUser();
+    } else {
+      setIsLoading(false);
     }
-  }, [user]);
+  }, [user, dispatch]);
+
   return (
     <>
       <Box className={classes.appBar}>
@@ -32,7 +48,8 @@ export const NavBar = () => {
           </Typography>
           <img className={classes.image} src={memento} alt="" />
         </Box>
-        {user ? (
+
+        {isLoading ? null : isAuthenticated && user ? (
           <Box
             sx={{
               display: "flex",
@@ -64,7 +81,6 @@ export const NavBar = () => {
           </Button>
         )}
       </Box>
-      {/* <Divider /> */}
     </>
   );
 };

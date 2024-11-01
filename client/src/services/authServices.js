@@ -13,6 +13,9 @@ const authServices = {
   async getUserData(id) {
     return await api.get(`/user/${id}`);
   },
+  async updateUser(id,data) {
+    return await api.patch(`/user/${id}`,data);
+  },
 };
 
 export default authServices;

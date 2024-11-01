@@ -7,8 +7,9 @@ import moment from "moment";
 
 export const Posts = ({ setCurrentId }) => {
   const classes = useStyles();
-  const { posts, status, error } = useSelector((state) => state.posts);
-
+  const { posts, status, hasMore,error } = useSelector((state) => state.posts);
+  console.log(error)
+  console.log(posts)
   return !posts?.length ? (
     <Box
       sx={{
@@ -26,18 +27,30 @@ export const Posts = ({ setCurrentId }) => {
       container
       alignItems="stretch"
       spacing={3}
-      
     >
-      {[...posts] 
-        .sort(
-          (a, b) =>
-            moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()
-        )
-        .map((post) => (
-          <Grid key={post._id} item xs={12} sm={12}>
-            <Post post={post} setCurrentId={setCurrentId} />
-          </Grid>
-        ))}
+      {[...posts].map((post) => (
+        <Grid key={post._id} item xs={12} sm={12}>
+          <Post post={post} setCurrentId={setCurrentId} />
+        </Grid>
+      ))}
+
+      {status === "loading" && (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!hasMore && (
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          textAlign={"center"}
+          width={"100%"}
+          m={2}
+        >
+          No more Mementos
+        </Typography>
+      )}
     </Grid>
   );
 };
