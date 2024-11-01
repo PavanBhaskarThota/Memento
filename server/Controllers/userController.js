@@ -1,4 +1,4 @@
-import userServices from "../Services/userServices.js";
+import userServices from "../Services/UserServices.js";
 
 class UserController {
   async isUserNameTaken(req, res) {
