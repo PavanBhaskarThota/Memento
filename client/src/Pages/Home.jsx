@@ -172,6 +172,72 @@ export const Home = () => {
                       on others
                     </Typography>
                   )}
+                  <Box
+                    sx={{
+                      marginTop: "20px",
+                      bgcolor: "white",
+                      borderRadius: "10px",
+                      padding: "20px",
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        marginBottom: "10px",
+                      }}
+                    >
+                      Mementos App Features and Upcoming Updates
+                    </Typography>
+
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ fontWeight: "bold", marginBottom: "8px" }}
+                    >
+                      Current Features:
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Users can create, update, and delete their mementos
+                      (only for logged-in users).
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Users can like any memento available on the app.
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Users can comment on mementos and reply to existing
+                      comments.
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Users can update their profile, including profile
+                      picture, bio, and date of birth.
+                    </Typography>
+
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: "bold",
+                        marginTop: "20px",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      Upcoming Updates:
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Enhanced notification system for new comments, likes,
+                      and replies.
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Improved search and filter options to easily find
+                      mementos.
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Additional customization options for user profiles.
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginBottom: "8px" }}>
+                      • Users will be able to view and manage all their posted
+                      and liked mementos directly from their profile.
+                    </Typography>
+                  </Box>
                 </Box>
               </Grid>
             )}
@@ -195,6 +261,27 @@ export const Home = () => {
                     others
                   </Typography>
                 )}
+                <Box
+                  sx={{
+                    marginTop: "20px",
+                    bgcolor: "white",
+                    borderRadius: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{
+                      marginBottom: "10px",
+                    }}
+                  >
+                    Exciting new features are on the way for the Mementos app!
+                    Stay tuned as we enhance your experience with more
+                    functionality and improvements designed to make sharing and
+                    managing your memories even more enjoyable.
+                  </Typography>
+                </Box>
               </Grid>
             )}
           </Grid>
