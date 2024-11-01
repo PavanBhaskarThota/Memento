@@ -92,11 +92,11 @@ export const Auth = () => {
     if (userData.profilePic) {
       const data = new FormData();
       data.append("file", userData.profilePic);
-      data.append("upload_preset", "memento");
-      data.append("cloud_name", "dowxfiyte");
+      data.append("upload_preset", process.env.REACT_APP_UPLOAD_KEY);
+      data.append("cloud_name", process.env.REACT_APP_CLOUD_API_KEY);
 
       const res = await fetch(
-        "https://api.cloudinary.com/v1_1/dowxfiyte/image/upload",
+        process.env.REACT_APP_CLOUDINARY_UPLOAD_URL,
         {
           method: "post",
           body: data,

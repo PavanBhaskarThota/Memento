@@ -4,10 +4,10 @@ import { Home } from "../Pages/Home";
 import { Auth } from "../Pages/Auth/Auth";
 import { UserProfile } from "../Pages/UserProfile";
 import { PrivateRoute } from "./PrivateRoute";
+import { SinglePostPage } from "../Pages/SinglePosPage/SinglePostPage";
+
 
 export const MainRoutes = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
-  console.log(isAuthenticated)
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -17,6 +17,14 @@ export const MainRoutes = () => {
         element={
           <PrivateRoute>
             <UserProfile />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={`posts/:userName/:id`}
+        element={
+          <PrivateRoute>
+            <SinglePostPage />
           </PrivateRoute>
         }
       />

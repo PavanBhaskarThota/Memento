@@ -14,7 +14,7 @@ class UserServices {
 
   async createUser(user) {
     try {
-      const { name, email, password } = user;
+      const { email, password } = user;
       const existingUser = await UserModel.findOne({ email });
 
       if (existingUser) {
@@ -64,6 +64,23 @@ class UserServices {
   async getUserData(id) {
     try {
       const user = await UserModel.findOne({ _id: id });
+      if (user) return user;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async updateUser(id, data) {
+    try {
+      const userData = { ...data };
+      if (userData.userId && userData.userName) {
+        delete userData.userId;
+        delete userData.userName;
+      }
+
+      const user = await UserModel.findOneAndUpdate({ _id: id }, data, {
+        new: true,
+      });
       if (user) return user;
     } catch (error) {
       return { error: error.message };

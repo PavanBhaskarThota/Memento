@@ -119,11 +119,11 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
       if (postData.photo && !currentId) {
         const data = new FormData();
         data.append("file", postData.photo);
-        data.append("upload_preset", "memento");
-        data.append("cloud_name", "dowxfiyte");
+        data.append("upload_preset", `${process.env.REACT_APP_UPLOAD_KEY}`);
+        data.append("cloud_name", `${process.env.REACT_APP_CLOUD_API_KEY}`);
 
         const res = await fetch(
-          "https://api.cloudinary.com/v1_1/dowxfiyte/image/upload",
+          `${process.env.REACT_APP_CLOUDINARY_UPLOAD_URL}`,
           {
             method: "post",
             body: data,
@@ -133,13 +133,14 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
         const urlData = await res.json();
         post.photo = urlData.url;
       }
-      post.tags = post.tags.split(",").map((tag) => tag.trim());
+
+      if (!Array.isArray(post.tags)) {
+        post.tags = post.tags.split(",").map((tag) => tag.trim());
+      }
 
       if (currentId) {
-        console.log(post);
         dispatch(updatePost({ id: currentId, post }));
       } else {
-        console.log(post);
         dispatch(createPost(post));
       }
       clear();
@@ -239,7 +240,6 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
                     variant="contained"
                     color="error"
                     onClick={handleFileRemove}
-                    // startIcon={<HighlightOffIcon />}
                   >
                     <HighlightOffIcon />
                   </Button>

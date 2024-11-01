@@ -18,6 +18,7 @@ import { DeleteModal } from "../../Modals/DeleteModal";
 import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "../../../Redux/slices/post.slice";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
@@ -25,6 +26,7 @@ export const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
 
   const isAuthenticated = !!localStorage.getItem("token");
 
@@ -40,12 +42,21 @@ export const Post = ({ post, setCurrentId }) => {
     dispatch(likePost(post._id));
   };
 
+  const handleNavigate = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login first");
+      return;
+    }
+    navigate(`/posts/${post.userName}/${post._id}`);
+  };
+
   return (
     <Card className={classes.card}>
       <Box position="relative">
         <CardMedia
           className={classes?.media}
           image={post?.photo}
+          onClick={handleNavigate}
           alt="https://via.placeholder.com/300x200?text=Image+Not+Available"
           onError={(e) => {
             e.target.src =

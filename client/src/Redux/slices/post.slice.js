@@ -4,9 +4,14 @@ import toast from "react-hot-toast";
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
-  async (_, { rejectWithValue }) => {
+  async ({ page, forceRefresh = false }, { getState, rejectWithValue }) => {
+    const state = getState().posts;
+    if (state.fetchedPages.includes(page) && !forceRefresh) {
+      return [];
+    }
+
     try {
-      const response = await PostService.getAllPosts();
+      const response = await PostService.getAllPosts(page);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -73,6 +78,33 @@ export const likePost = createAsyncThunk(
   }
 );
 
+export const getPostById = createAsyncThunk(
+  "posts/getPostData",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await PostService.getPostById(id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateComment = createAsyncThunk(
+  "posts/updateComment",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await PostService.updateComment(
+        id,
+        JSON.stringify(data)
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
@@ -80,24 +112,45 @@ const postsSlice = createSlice({
     status: "idle",
     error: null,
     message: null,
+    singlePostData: null,
+    hasMore: true,
+    page: 1,
+    fetchedPages: [],
   },
-  reducers: {},
+  reducers: {
+    incrementPage(state) {
+      state.page += 1;
+    },
+    resetPosts(state) {
+      state.posts = [];
+      state.page = 1;
+      state.hasMore = true;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getPosts.pending, (state) => {
         state.status = "loading";
       })
       .addCase(getPosts.fulfilled, (state, action) => {
+        const { page } = action.meta;
+
+        if (action.payload.length === 0) {
+          state.hasMore = false; // No more posts if response is empty
+        } else {
+          state.posts = [...state.posts, ...action.payload];
+          state.fetchedPages.push(page); // Mark page as fetched
+        }
         state.status = "succeeded";
-        state.posts = action.payload;
       })
       .addCase(getPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        if (action.payload.photo) {
-          state.posts.push(action.payload);
+        console.log("action.payload", action.payload);
+        if (action.payload) {
+          state.posts.unshift(action.payload);
         }
       })
       .addCase(updatePost.fulfilled, (state, action) => {
@@ -119,9 +172,22 @@ const postsSlice = createSlice({
           state.posts = state.posts.map((post) =>
             post._id === action.payload._id ? action.payload : post
           );
+          state.singlePostData = action.payload;
+        }
+      })
+      .addCase(getPostById.fulfilled, (state, action) => {
+        if (action.payload.message !== "Unauthorized") {
+          state.singlePostData = action.payload;
+        }
+      })
+      .addCase(updateComment.fulfilled, (state, action) => {
+        if (action.payload.message !== "Unauthorized") {
+          state.singlePostData = action.payload;
         }
       });
   },
 });
+
+export const { incrementPage, resetPosts } = postsSlice.actions;
 
 export default postsSlice.reducer;
