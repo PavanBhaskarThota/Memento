@@ -153,7 +153,7 @@ export const UserProfile = () => {
     }
   };
 
-  if (!user || status === "loading") {
+  if (!user) {
     return <CircularProgress />;
   }
 
@@ -163,7 +163,7 @@ export const UserProfile = () => {
   const renderField = (label, name, type = "text", rows = 1) => (
     <Typography variant="h6">
       {label}:{" "}
-      {isEditing && name !== 'email' ? (
+      {isEditing && name !== "email" ? (
         <TextField
           name={name}
           value={
@@ -183,6 +183,24 @@ export const UserProfile = () => {
       )}
     </Typography>
   );
+
+  if (status === "loading") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100dvh",
+          width: "100%",
+          backgroundImage:
+            "linear-gradient(to right, #d7d2cc 0%, #304352 100%)",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box

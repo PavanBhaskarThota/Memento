@@ -7,6 +7,7 @@ import {
   AvatarGroup,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -23,7 +24,7 @@ import { Comments } from "./Comments";
 export const SinglePostPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { singlePostData } = useSelector((state) => state.posts);
+  const { singlePostData ,status} = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.user);
   const [isLiked, setIsLiked] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -49,6 +50,22 @@ export const SinglePostPage = () => {
       dispatch(getPostById(id));
     }
   };
+
+  if(status === "loading"){
+    return(
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100dvh",
+          backgroundImage: "linear-gradient(to right, #d7d2cc 0%, #304352 100%)",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <Box

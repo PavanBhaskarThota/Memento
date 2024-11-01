@@ -134,12 +134,11 @@ const postsSlice = createSlice({
       })
       .addCase(getPosts.fulfilled, (state, action) => {
         const { page } = action.meta;
-
         if (action.payload.length === 0) {
-          state.hasMore = false; // No more posts if response is empty
+          state.hasMore = false;
         } else {
           state.posts = [...state.posts, ...action.payload];
-          state.fetchedPages.push(page); // Mark page as fetched
+          state.fetchedPages.push(page);
         }
         state.status = "succeeded";
       })
@@ -147,11 +146,21 @@ const postsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(createPost.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(createPost.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
         if (action.payload) {
           state.posts.unshift(action.payload);
         }
+        state.status = "succeeded";
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updatePost.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
@@ -159,6 +168,14 @@ const postsSlice = createSlice({
             post._id === action.payload._id ? action.payload : post
           );
         }
+        state.status = "succeeded";
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(deletePost.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         if (action.payload.message === "Post Deleted") {
@@ -166,6 +183,14 @@ const postsSlice = createSlice({
             (post) => post._id !== action.payload.post._id
           );
         }
+        state.status = "succeeded";
+      })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(likePost.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(likePost.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
@@ -174,16 +199,37 @@ const postsSlice = createSlice({
           );
           state.singlePostData = action.payload;
         }
+        state.status = "succeeded";
+      })
+      .addCase(likePost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getPostById.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(getPostById.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
           state.singlePostData = action.payload;
         }
+        state.status = "succeeded";
+      })
+      .addCase(getPostById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updateComment.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(updateComment.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
           state.singlePostData = action.payload;
         }
+        state.status = "succeeded";
+      })
+      .addCase(updateComment.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });

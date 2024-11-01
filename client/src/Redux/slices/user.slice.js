@@ -98,7 +98,6 @@ const userSlice = createSlice({
         } else {
           toast.success("User created successfully");
           saveUserToLocalStorage(payload);
-
           state.status = "succeeded";
           state.user = payload.user;
         }
@@ -106,6 +105,7 @@ const userSlice = createSlice({
       .addCase(createUser.rejected, (state, { payload }) => {
         state.status = "failed";
         state.error = payload;
+        toast.error("Failed to create user");
       })
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
@@ -122,12 +122,31 @@ const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.status = "failed";
         state.error = payload;
+        toast.error("Failed to login");
+      })
+      .addCase(isUserNameTaken.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(isUserNameTaken.fulfilled, (state, { payload }) => {
         state.userNameTaken = payload;
+        state.status = "succeeded";
+      })
+      .addCase(isUserNameTaken.rejected, (state, { payload }) => {
+        state.status = "failed";
+        state.error = payload;
+        toast.error("Failed to check username availability");
+      })
+      .addCase(getUserData.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(getUserData.fulfilled, (state, { payload }) => {
         state.userProfileData = payload;
+        state.status = "succeeded";
+      })
+      .addCase(getUserData.rejected, (state, { payload }) => {
+        state.status = "failed";
+        state.error = payload;
+        toast.error("Failed to fetch user data");
       })
       .addCase(updateUserData.pending, (state) => {
         state.status = "loading";
@@ -139,6 +158,11 @@ const userSlice = createSlice({
         localStorage.setItem("user", JSON.stringify(user));
         state.userProfileData = payload;
         state.status = "succeeded";
+      })
+      .addCase(updateUserData.rejected, (state, { payload }) => {
+        state.status = "failed";
+        state.error = payload;
+        toast.error("Failed to update user data");
       });
   },
 });

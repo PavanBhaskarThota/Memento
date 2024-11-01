@@ -7,9 +7,9 @@ import moment from "moment";
 
 export const Posts = ({ setCurrentId }) => {
   const classes = useStyles();
-  const { posts, status, hasMore,error } = useSelector((state) => state.posts);
-  console.log(error)
-  console.log(posts)
+  const { posts, status, hasMore, error } = useSelector((state) => state.posts);
+  console.log(error);
+  console.log(posts);
   return !posts?.length ? (
     <Box
       sx={{
@@ -35,7 +35,16 @@ export const Posts = ({ setCurrentId }) => {
       ))}
 
       {status === "loading" && (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            mt: 1,
+            mb: 1,
+          }}
+        >
           <CircularProgress />
         </Box>
       )}

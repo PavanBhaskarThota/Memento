@@ -1,7 +1,7 @@
 import api from "../Api";
 
 const PostService = {
-  async getAllPosts(page,limit=2) {
+  async getAllPosts(page, limit = 5) {
     return await api.get(`/posts?page=${page}&limit=${limit}`);
   },
 
@@ -22,8 +22,8 @@ const PostService = {
   async getPostById(id) {
     return await api.get(`/posts/singlePost/${id}`);
   },
-  async updateComment(id,data) {
-    return await api.patch(`/posts/updateComment/${id}`,data);
+  async updateComment(id, data) {
+    return await api.patch(`/posts/updateComment/${id}`, data);
   },
 };
 
