@@ -189,9 +189,6 @@ const postsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(likePost.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(likePost.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
           state.posts = state.posts.map((post) =>
@@ -217,9 +214,6 @@ const postsSlice = createSlice({
       .addCase(getPostById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-      })
-      .addCase(updateComment.pending, (state) => {
-        state.status = "loading";
       })
       .addCase(updateComment.fulfilled, (state, action) => {
         if (action.payload.message !== "Unauthorized") {
