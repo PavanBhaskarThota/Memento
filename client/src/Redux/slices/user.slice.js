@@ -84,6 +84,10 @@ const userSlice = createSlice({
       TokenService.clearStorage();
       api.defaults.headers["Authorization"] = "";
       state.user = null;
+      state.userNameTaken = null;
+      state.status = "idle";
+      state.error = null;
+      state.userProfileData = null;
     },
   },
   extraReducers: (builder) => {
@@ -123,9 +127,6 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = payload;
         toast.error("Failed to login");
-      })
-      .addCase(isUserNameTaken.pending, (state) => {
-        state.status = "loading";
       })
       .addCase(isUserNameTaken.fulfilled, (state, { payload }) => {
         state.userNameTaken = payload;

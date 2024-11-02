@@ -119,11 +119,11 @@ export const Form = ({ currentId, setCurrentId, handleClose }) => {
       if (postData.photo && !currentId) {
         const data = new FormData();
         data.append("file", postData.photo);
-        data.append("upload_preset", `${process.env.REACT_APP_UPLOAD_KEY}`);
-        data.append("cloud_name", `${process.env.REACT_APP_CLOUD_API_KEY}`);
+        data.append("upload_preset", process.env.REACT_APP_UPLOAD_KEY);
+        data.append("cloud_name", process.env.REACT_APP_CLOUD_API_KEY);
 
         const res = await fetch(
-          `${process.env.REACT_APP_CLOUDINARY_UPLOAD_URL}`,
+          process.env.REACT_APP_CLOUDINARY_UPLOAD_URL,
           {
             method: "post",
             body: data,
