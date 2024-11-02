@@ -138,10 +138,11 @@ export const Auth = () => {
   }, [userNameTaken]);
 
   useEffect(() => {
-    if (status === "succeeded") {
+    if (status === "succeeded" && isAuthenticated) {
       navigate("/");
     }
-  }, [status, navigate]);
+  }, [status, isAuthenticated, navigate]);
+
 
   return (
     <Box className={classes.container}>

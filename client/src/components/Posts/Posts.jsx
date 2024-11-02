@@ -8,8 +8,6 @@ import moment from "moment";
 export const Posts = ({ setCurrentId }) => {
   const classes = useStyles();
   const { posts, status, hasMore, error } = useSelector((state) => state.posts);
-  console.log(error);
-  console.log(posts);
   return !posts?.length ? (
     <Box
       sx={{

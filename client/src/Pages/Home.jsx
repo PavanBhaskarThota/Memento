@@ -21,7 +21,6 @@ import { deepOrange } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 
 export const Home = () => {
-  const classes = useStyles();
   const [currentId, setCurrentId] = useState(null);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -50,28 +49,6 @@ export const Home = () => {
     }
   }, [currentId, isMobile]);
 
-  // useEffect(() => {
-  //   if (currentPage === 1 && posts.length === 0) {
-  //     dispatch(getPosts({ currentPage }));
-  //   }
-  // }, [dispatch, currentPage]);
-
-  // useEffect(() => {
-  //   window.onscroll = () => {
-  //     if (
-  //       window.innerHeight + window.scrollY >=
-  //         document.documentElement.offsetHeight - 10 &&
-  //       hasMore
-  //     ) {
-  //       dispatch(incrementPage());
-  //       dispatch(getPosts({ page: currentPage + 1 }));
-  //     }
-  //   };
-  //   return () => (window.onscroll = null);
-  // }, [dispatch, currentPage, hasMore]);
-
-  // Remove this line: const [page, setPage] = useState(1);
-
   useEffect(() => {
     if (currentPage === 1 && posts.length === 0) {
       dispatch(getPosts({ page: currentPage }));
@@ -89,7 +66,7 @@ export const Home = () => {
         dispatch(getPosts({ page: currentPage + 1 }));
       }
     };
-    return () => (window.onscroll = null); // Clean up on unmount
+    return () => (window.onscroll = null);
   }, [dispatch, currentPage, hasMore]);
 
   return (
