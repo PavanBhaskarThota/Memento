@@ -51,10 +51,7 @@ export const deletePost = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await PostService.deletePost(id);
-      if (
-        response.statusText === "OK" &&
-        response.data.message === "Post Deleted"
-      ) {
+      if (response.data.message === "Post Deleted") {
         return response.data;
       } else if (response.data.message === "Unauthorized") {
         toast.error("You can't delete other people posts");
@@ -183,7 +180,9 @@ const postsSlice = createSlice({
             (post) => post._id !== action.payload.post._id
           );
         }
+        toast.success("Post deleted successfully");
         state.status = "succeeded";
+        state.message = action.payload.message;
       })
       .addCase(deletePost.rejected, (state, action) => {
         state.status = "failed";
